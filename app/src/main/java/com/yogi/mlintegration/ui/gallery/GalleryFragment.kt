@@ -4,35 +4,51 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import com.yogi.imageselectorlibrary.ImageSelector
 import com.yogi.mlintegration.databinding.FragmentGalleryBinding
 
 class GalleryFragment : Fragment() {
 
     private var _binding: FragmentGalleryBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+
+    private val viewModel : GalleryViewModel by viewModels()
+
+    private lateinit var imageSelector: ImageSelector
+
+    private val adapter = GalleryAdapter()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        imageSelector = ImageSelector(requireActivity())
+        lifecycle.addObserver(imageSelector)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val galleryViewModel =
-            ViewModelProvider(this).get(GalleryViewModel::class.java)
-
         _binding = FragmentGalleryBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textGallery
-        galleryViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        binding.apply {
+            rv.adapter = adapter
+            btOneImage.setOnClickListener {
+                imageSelector.selectSingleImage {
+                    viewModel.addImages(listOf(it))
+                }
+            }
+            btMiltipleImage.setOnClickListener {
+                imageSelector.selectMultipleImage {
+                    viewModel.addImages(it)
+                }
+            }
         }
-        return root
+        viewModel.uris.observe(viewLifecycleOwner) {
+            adapter.setData(it)
+        }
+        return binding.root
     }
 
     override fun onDestroyView() {

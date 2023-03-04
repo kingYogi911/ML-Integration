@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "ML Integration"
 include ':app'
 include ':permissionslibrary'
+include ':imageSelectorlibrary'

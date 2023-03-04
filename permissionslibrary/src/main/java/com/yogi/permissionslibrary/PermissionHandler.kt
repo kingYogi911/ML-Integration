@@ -10,7 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 
-class PermissionHandler(
+class PermissionHandler constructor(
     private val activity: ComponentActivity,
 ) : LifecycleEventObserver {
 
@@ -21,6 +21,9 @@ class PermissionHandler(
     private var lastRequestedPermissions: List<String> = listOf()
     private var isSinglePermissionRequested: Boolean = true
     private var permanentlyDeclinedCallback: ((openSettings: () -> Unit) -> Unit)? = null
+    private var multiplePermanentlyDeclinedCallback: ((permission:String,openSettings: () -> Unit) -> Unit)? = null
+
+    private var multiplePermissionCallback: ((Boolean) -> Unit)? = null
 
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         if (source.lifecycle.currentState == Lifecycle.State.CREATED) {
@@ -53,7 +56,7 @@ class PermissionHandler(
         }
     }
 
-    @Throws(HandlerInitializationException::class)
+    @Throws(ContractInitializationException::class)
     fun requestPermission(
         permission: String,
         showRationale: (onRationaleAccepted: () -> Unit) -> Unit,
@@ -61,10 +64,8 @@ class PermissionHandler(
         callBack: (Boolean) -> Unit
     ) {
         if (permissionLauncher == null) {
-            throw HandlerInitializationException()
+            throw ContractInitializationException()
         }
-
-
         isSinglePermissionRequested = true
         lastRequestedPermissions = listOf(permission)
         singlePermissionCallback = callBack
@@ -119,5 +120,50 @@ class PermissionHandler(
                 }
             }
         )
+    }
+
+    fun requestMultiplePermissions(
+        vararg permissions: String,
+        showRationale: (permission: String, onRationaleAccepted: () -> Unit) -> Unit,
+        permanentlyDeclinedCallback: (permission: String, openSettings: () -> Unit) -> Unit,
+        callBack: (Boolean) -> Unit
+    ) {
+        if (permissionLauncher == null) {
+            throw ContractInitializationException()
+        }
+        isSinglePermissionRequested = false
+        lastRequestedPermissions = permissions.toList()
+        multiplePermissionCallback = callBack
+        this.multiplePermanentlyDeclinedCallback = permanentlyDeclinedCallback
+
+        val permissionHelpers = lastRequestedPermissions.map { PermissionsHelper(it,activity) }
+        val granted = permissionHelpers.filter { it.isGranted() }
+        val declined = permissionHelpers.filter { it.isRationaleAlreadyShown() }.map { it.manifestPermission }
+        val forRationale = permissionHelpers.filter { it.shouldShowRationale() }.map { it.manifestPermission }
+        when{
+            permissionHelpers.size == granted.size -> {
+                multiplePermissionCallback?.invoke(true)
+            }
+            forRationale.isNotEmpty() -> {
+                forRationale.forEach { permission->
+                    showRationale.invoke(permission){
+                        permissionLauncher!!.launch(arrayOf(permission))
+                    }
+                }
+            }
+            declined.isNotEmpty() -> {
+                declined.forEach { permission->
+                    permanentlyDeclinedCallback(permission) {
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.fromParts("package", activity.packageName, null)
+                        }
+                        appSettingsLauncher.launch(intent)
+                    }
+                }
+            }
+            else->{
+
+            }
+        }
     }
 }

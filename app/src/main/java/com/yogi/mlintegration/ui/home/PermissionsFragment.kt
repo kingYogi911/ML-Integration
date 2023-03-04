@@ -8,10 +8,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.yogi.imageselectorlibrary.ImageSelector
 import com.yogi.mlintegration.databinding.FragmentHomeBinding
 import com.yogi.permissionslibrary.PermissionHandler
 
-class HomeFragment : Fragment() {
+class PermissionsFragment : Fragment() {
 
     lateinit var permissionsHandler: PermissionHandler
 
@@ -32,13 +33,13 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
+        val permissionsViewModel = ViewModelProvider(this)[PermissionsViewModel::class.java]
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
+        permissionsViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         binding.btPermission.setOnClickListener {
@@ -72,9 +73,9 @@ class HomeFragment : Fragment() {
                 }
             ) { isGranted ->
                 if (isGranted) {
-                    homeViewModel.setMessage("Permission is Granted")
+                    permissionsViewModel.setMessage("Permission is Granted")
                 } else {
-                    homeViewModel.setMessage("Permission is Not Granted")
+                    permissionsViewModel.setMessage("Permission is Not Granted")
                 }
             }
         }
@@ -104,7 +105,7 @@ class HomeFragment : Fragment() {
                         .show()
                 }
             ) {
-                homeViewModel.setMessage("Permission is Granted")
+                permissionsViewModel.setMessage("Permission is Granted")
             }
         }
         return root
