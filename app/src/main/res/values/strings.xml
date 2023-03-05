@@ -8,6 +8,8 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
+    <string name="menu_permissions">Permissions</string>
     <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_image_labeling">Image Labeling</string>
+    <string name="google_ml_kit">Google ML Kit</string>
 </resources>

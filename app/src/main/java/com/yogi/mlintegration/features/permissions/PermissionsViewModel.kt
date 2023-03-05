@@ -1,4 +1,4 @@
-package com.yogi.mlintegration.ui.home
+package com.yogi.mlintegration.features.permissions
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

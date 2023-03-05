@@ -1,25 +1,22 @@
-package com.yogi.mlintegration.ui.gallery
+package com.yogi.mlintegration.features.gallery
 
 import android.Manifest
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.yogi.imageselectorlibrary.ImageCapture
 import com.yogi.imageselectorlibrary.ImageSelector
 import com.yogi.imageselectorlibrary.MyFileProvider
+import com.yogi.mlintegration.R
 import com.yogi.mlintegration.databinding.FragmentGalleryBinding
+import com.yogi.mlintegration.base.BaseFragment
 import com.yogi.permissionslibrary.PermissionHandler
 import java.io.File
 
-class GalleryFragment : Fragment() {
-
-    private var _binding: FragmentGalleryBinding? = null
-    private val binding get() = _binding!!
-
+class GalleryFragment : BaseFragment<FragmentGalleryBinding>(
+    R.layout.fragment_gallery
+) {
     private val viewModel: GalleryViewModel by viewModels()
 
     private lateinit var imageSelector: ImageSelector
@@ -38,12 +35,9 @@ class GalleryFragment : Fragment() {
         lifecycle.addObserver(permissionHandler)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentGalleryBinding.inflate(inflater, container, false)
+    override fun bindView(view: View) = FragmentGalleryBinding.bind(view)
+
+    override fun initViews() {
         binding.apply {
             rv.adapter = adapter
             btOneImage.setOnClickListener {
@@ -74,15 +68,9 @@ class GalleryFragment : Fragment() {
         viewModel.uris.observe(viewLifecycleOwner) {
             adapter.setData(it)
         }
-        return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    fun cameraPermissions(onAccept: () -> Unit) {
+    private fun cameraPermissions(onAccept: () -> Unit) {
         permissionHandler.requestPermission(
             Manifest.permission.CAMERA,
             showRationale = { onRationaleAccepted ->

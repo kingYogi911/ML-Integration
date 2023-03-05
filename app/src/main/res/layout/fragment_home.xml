@@ -1,49 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    tools:context=".ui.home.PermissionsFragment">
-
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:text="Request Permission"
-        android:textColor="#434343"
-        app:cornerRadius="8dp"
-        android:backgroundTint="#55dd44"
-        android:id="@+id/bt_permission"
-        app:rippleColor="#f4f4f4"
-        android:textAllCaps="false"
-        app:strokeColor="#434343"
-        app:strokeWidth="2dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:text="Request Permission In Loop"
-        android:textColor="#434343"
-        app:cornerRadius="8dp"
-        android:backgroundTint="#55dd44"
-        android:id="@+id/bt_permission_looped"
-        app:rippleColor="#f4f4f4"
-        android:textAllCaps="false"
-        app:strokeColor="#434343"
-        app:strokeWidth="2dp" />
-
+    tools:context=".features.home.HomeFragment">
 
     <TextView
-        android:id="@+id/text_home"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:id="@+id/tv"
+        android:textStyle="bold"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</LinearLayout>
+        android:textColor="@color/black"
+        android:text="Hello" />
+
+</FrameLayout>

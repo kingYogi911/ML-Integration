@@ -1,26 +1,20 @@
-package com.yogi.mlintegration.ui.home
+package com.yogi.mlintegration.features.permissions
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.yogi.imageselectorlibrary.ImageSelector
-import com.yogi.mlintegration.databinding.FragmentHomeBinding
+import androidx.fragment.app.viewModels
+import com.yogi.mlintegration.R
+import com.yogi.mlintegration.databinding.FragmentPermissionsBinding
+import com.yogi.mlintegration.base.BaseFragment
 import com.yogi.permissionslibrary.PermissionHandler
 
-class PermissionsFragment : Fragment() {
+class PermissionsFragment : BaseFragment<FragmentPermissionsBinding>(
+    R.layout.fragment_permissions
+) {
 
     lateinit var permissionsHandler: PermissionHandler
-
-    private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private val permissionsViewModel: PermissionsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,19 +22,11 @@ class PermissionsFragment : Fragment() {
         lifecycle.addObserver(permissionsHandler)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val permissionsViewModel = ViewModelProvider(this)[PermissionsViewModel::class.java]
+    override fun bindView(view: View) = FragmentPermissionsBinding.bind(view)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
+    override fun initViews() {
         permissionsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+            binding.textHome.text = it
         }
         binding.btPermission.setOnClickListener {
             permissionsHandler.requestPermission(
@@ -108,11 +94,5 @@ class PermissionsFragment : Fragment() {
                 permissionsViewModel.setMessage("Permission is Granted")
             }
         }
-        return root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

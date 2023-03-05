@@ -1,4 +1,4 @@
-package com.yogi.mlintegration.ui.gallery
+package com.yogi.mlintegration.features.gallery
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
