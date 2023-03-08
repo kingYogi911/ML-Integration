@@ -53,4 +53,7 @@ dependencies {
 
     //image labeling
     implementation 'com.google.mlkit:image-labeling:17.0.7'
+
+    //object detection
+    implementation 'com.google.mlkit:object-detection:17.0.0'
 }

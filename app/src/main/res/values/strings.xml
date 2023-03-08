@@ -11,5 +11,6 @@
     <string name="menu_permissions">Permissions</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_image_labeling">Image Labeling</string>
+    <string name="menu_object_detection">Object Detection</string>
     <string name="google_ml_kit">Google ML Kit</string>
 </resources>

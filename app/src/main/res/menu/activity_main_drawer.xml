@@ -23,6 +23,10 @@
                         android:id="@+id/nav_image_labeling"
                         android:icon="@drawable/icon_label"
                         android:title="@string/menu_image_labeling" />
+                    <item
+                        android:id="@+id/nav_object_detection"
+                        android:icon="@drawable/icon_object_detection"
+                        android:title="@string/menu_object_detection" />
                 </group>
             </menu>
         </item>
