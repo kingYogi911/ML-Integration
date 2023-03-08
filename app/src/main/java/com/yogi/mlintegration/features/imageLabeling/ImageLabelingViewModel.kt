@@ -10,17 +10,19 @@ import com.google.mlkit.vision.label.ImageLabeler
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import com.yogi.mlintegration.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class ImageLabelingViewModel : BaseViewModel() {
 
-    private val _text = MutableLiveData("")
-    val text: LiveData<String> = _text
     private val _image: MutableLiveData<Bitmap?> = MutableLiveData(null)
     val image get() = _image.asLiveData()
+    private val _labels: MutableLiveData<List<ImageLabel>> = MutableLiveData(emptyList())
+    val labels get() = _labels.asLiveData()
 
     fun labelingFromImage(imageBitmap: Bitmap) {
         _image.value = imageBitmap
@@ -34,13 +36,9 @@ class ImageLabelingViewModel : BaseViewModel() {
                     ImageLabeling.getClient(it)
                 }
             try {
-                _text.value = labeler.getLabelsFromImage(input).joinToString("\n") {
-                    "Index : ${it.index}\n" +
-                            "Label : ${it.text}\n" +
-                            "Confidence : ${it.confidence}\n"
-                }
+                _labels.value = withContext(Dispatchers.IO) { labeler.getLabelsFromImage(input) }!!
             } catch (e: Exception) {
-                _text.value = e.message
+                _errorData.value = e
             }
             _progress.value = false
         }

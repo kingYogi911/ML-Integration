@@ -47,8 +47,8 @@
         <ImageView
             android:id="@+id/iv"
             android:layout_width="wrap_content"
-            android:layout_gravity="center"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:adjustViewBounds="true" />
     </com.google.android.material.card.MaterialCardView>
 
@@ -69,19 +69,13 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ScrollView
-                android:id="@+id/sv"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </ScrollView>
+                android:overScrollMode="ifContentScrolls"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <com.google.android.material.progressindicator.CircularProgressIndicator
                 android:id="@+id/progress_indicator"

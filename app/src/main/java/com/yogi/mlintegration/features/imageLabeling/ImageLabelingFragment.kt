@@ -28,6 +28,8 @@ class ImageLabelingFragment : BaseFragment<FragmentImageLabelingBinding>(
     private lateinit var imageSelector: ImageSelector
     private lateinit var imageCapture: ImageCapture
 
+    private val labelsAdapter = ImageLabelsAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         imageSelector = ImageSelector(requireActivity())
@@ -70,19 +72,16 @@ class ImageLabelingFragment : BaseFragment<FragmentImageLabelingBinding>(
                     }
                 )
             }
-        }
-        viewModel.text.observe(viewLifecycleOwner) {
-            binding.tv.text = it
-        }
-        viewModel.image.observe(viewLifecycleOwner) {
-            binding.iv.setImageBitmap(it)
+            rv.adapter = labelsAdapter
         }
         viewModel.progress.observe(viewLifecycleOwner) {
             binding.apply {
-                sv.isVisible = it == false
+                rv.isVisible = it == false
                 progressIndicator.isVisible = it == true
             }
         }
+        viewModel.image.observe(viewLifecycleOwner, binding.iv::setImageBitmap)
+        viewModel.labels.observe(viewLifecycleOwner, labelsAdapter::setData)
     }
 
     private fun showImageSelectionOptions(
