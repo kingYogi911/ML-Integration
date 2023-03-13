@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import com.yogi.imageselectorlibrary.ImageCapture
+import com.yogi.imageselectorlibrary.ImageCaptureDefault
 import com.yogi.imageselectorlibrary.ImageSelector
 import com.yogi.imageselectorlibrary.MyFileProvider
 import com.yogi.mlintegration.R
@@ -20,7 +20,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(
     private val viewModel: GalleryViewModel by viewModels()
 
     private lateinit var imageSelector: ImageSelector
-    private lateinit var imageCapture: ImageCapture
+    private lateinit var imageCaptureDefault: ImageCaptureDefault
     private lateinit var permissionHandler: PermissionHandler
 
     private val adapter = GalleryAdapter()
@@ -29,8 +29,8 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(
         super.onCreate(savedInstanceState)
         imageSelector = ImageSelector(requireActivity())
         lifecycle.addObserver(imageSelector)
-        imageCapture = ImageCapture(requireActivity())
-        lifecycle.addObserver(imageCapture)
+        imageCaptureDefault = ImageCaptureDefault(requireActivity())
+        lifecycle.addObserver(imageCaptureDefault)
         permissionHandler = PermissionHandler(requireActivity())
         lifecycle.addObserver(permissionHandler)
     }
@@ -52,7 +52,7 @@ class GalleryFragment : BaseFragment<FragmentGalleryBinding>(
             }
             btCameraImage.setOnClickListener {
                 cameraPermissions {
-                    imageCapture.capture {
+                    imageCaptureDefault.capture {
                         viewModel.addImages(
                             listOf(
                                 MyFileProvider.getUriForFile(

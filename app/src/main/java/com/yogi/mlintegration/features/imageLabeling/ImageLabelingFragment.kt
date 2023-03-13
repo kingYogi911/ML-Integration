@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.yogi.imageselectorlibrary.ImageCapture
+import com.yogi.imageselectorlibrary.ImageCaptureDefault
 import com.yogi.imageselectorlibrary.ImageSelector
 import com.yogi.mlintegration.R
 import com.yogi.mlintegration.base.BaseFragment
@@ -26,7 +26,7 @@ class ImageLabelingFragment : BaseFragment<FragmentImageLabelingBinding>(
     private val viewModel: ImageLabelingViewModel by viewModels()
     private lateinit var permissionHandler: PermissionHandler
     private lateinit var imageSelector: ImageSelector
-    private lateinit var imageCapture: ImageCapture
+    private lateinit var imageCaptureDefault: ImageCaptureDefault
 
     private val labelsAdapter = ImageLabelsAdapter()
 
@@ -34,8 +34,8 @@ class ImageLabelingFragment : BaseFragment<FragmentImageLabelingBinding>(
         super.onCreate(savedInstanceState)
         imageSelector = ImageSelector(requireActivity())
         lifecycle.addObserver(imageSelector)
-        imageCapture = ImageCapture(requireActivity())
-        lifecycle.addObserver(imageCapture)
+        imageCaptureDefault = ImageCaptureDefault(requireActivity())
+        lifecycle.addObserver(imageCaptureDefault)
         permissionHandler = PermissionHandler(requireActivity())
         lifecycle.addObserver(permissionHandler)
     }
@@ -48,7 +48,7 @@ class ImageLabelingFragment : BaseFragment<FragmentImageLabelingBinding>(
                 showImageSelectionOptions(
                     onSelectCamera = {
                         cameraPermissions {
-                            imageCapture.capture { filePath ->
+                            imageCaptureDefault.capture { filePath ->
                                 viewModel.labelingFromImage(BitmapFactory.decodeFile(filePath))
                             }
                         }

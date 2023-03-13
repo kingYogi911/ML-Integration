@@ -12,7 +12,7 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ImageCapture constructor(
+class ImageCaptureDefault constructor(
     private val activity: ComponentActivity
 ) : LifecycleEventObserver {
 

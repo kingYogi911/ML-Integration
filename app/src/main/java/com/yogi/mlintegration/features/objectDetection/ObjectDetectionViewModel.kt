@@ -18,6 +18,9 @@ import kotlin.coroutines.suspendCoroutine
 
 class ObjectDetectionViewModel : BaseViewModel() {
 
+    private val _mode = MutableLiveData(MODE.GALLERY)
+    val mode get() = _mode.asLiveData()
+
     private var _originalImage: Bitmap? = null
     private val _image: MutableLiveData<Bitmap?> = MutableLiveData(null)
     val image get() = _image.asLiveData()
@@ -26,6 +29,12 @@ class ObjectDetectionViewModel : BaseViewModel() {
     val detectedObjects get() = _detectedObjects.asLiveData()
     private val _selected: MutableLiveData<DetectedObject?> = MutableLiveData(null)
     val selected get() = _selected.asLiveData()
+
+    fun setImageMode(mode: MODE) {
+        if (_mode.value != mode) {
+            _mode.value = mode
+        }
+    }
 
     fun detectObjectsFromImage(imageBitmap: Bitmap) {
         _originalImage = imageBitmap
@@ -45,7 +54,7 @@ class ObjectDetectionViewModel : BaseViewModel() {
 
                 withContext(Dispatchers.IO) { objectDetector.getDetectedObjectsInImage(input) }.also {
                     _detectedObjects.value = it
-                    if(_detectedObjects.value!!.isNotEmpty()){
+                    if (_detectedObjects.value!!.isNotEmpty()) {
                         _selected.value = _detectedObjects.value!!.first()
                         markObjectOnImage(_selected.value!!)
                     }
@@ -96,5 +105,9 @@ class ObjectDetectionViewModel : BaseViewModel() {
         )
 
         return bitmap
+    }
+
+    enum class MODE {
+        GALLERY, CAMERA_IMAGE
     }
 }
